@@ -56,18 +56,18 @@ module Figure8
   class NotConstantizableError < ArgumentError ; end
 
   module F8
-    def f8(obj, &config)
-      raise ArgumentError, "`obj' must be a String or Symbol" unless obj.is_a?(String) || obj.is_a?(Symbol)
-      raise NotConstantizableError, "`#{obj}' is not able to be constantized. perhaps you meant `#{obj.to_s.capitalize}'?" unless
-        obj.to_s.capitalized?
+    def f8(klass, &config)
+      raise ArgumentError, "`klass' must be a String or Symbol" unless klass.is_a?(String) || klass.is_a?(Symbol)
+      raise NotConstantizableError, "`#{klass}' is not able to be constantized. perhaps you meant `#{klass.to_s.capitalize}'?" unless
+        klass.to_s.capitalized?
 
-      obj = Object.const_get(obj)
+      klass = Object.const_get(klass)
     rescue NameError
-      obj = Object.const_set(obj, Class.new)
+      klass = Object.const_set(klass, Class.new)
     ensure
-      if obj.respond_to?(:class_eval) && block_given?
-        obj.extend Figure8::Configurator
-        obj.class_eval(&config)
+      if klass.respond_to?(:class_eval) && block_given?
+        klass.extend Figure8::Configurator
+        klass.class_eval(&config)
       end
     end
   end

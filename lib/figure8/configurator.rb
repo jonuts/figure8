@@ -10,7 +10,7 @@ module Figure8
 
     def set(name, val=nil, &blk)
       if val.nil? && block_given?
-
+        group(name, &blk)
       elsif val.nil?
         raise ArgumentError, "you must supply a value with your setting"
       else
@@ -19,11 +19,15 @@ module Figure8
     end
 
     def group(name, &blk)
+      scope.find_or_create(:group, name).instance_eval(&blk)
     end
-
 
     def configs
       scope.configs
+    end
+
+    def groups
+      scope.groups
     end
 
     def find_config(name)

@@ -21,8 +21,15 @@ module Figure8
     end
 
     def find_or_create(which, name)
-      find(which, name) || send(which.to_s.pluralize).push(Config.new(:name => name)).last
+      case which
+      when :group
+        find(:group, name) || groups.push(Group.new(:name => name)).last
+      when :config
+        find(:config, name) || configs.push(Config.new(:name => name)).last
+      end
+      #find(which, name) || send(which.to_s.pluralize).push(constantize(which).new(:name => name)).last
     end
+
   end
 end
 
