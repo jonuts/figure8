@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.has_rdoc = false
   s.homepage = %q{http://github.com/jonuts/figure8}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
-  s.require_paths = ["lib"]
+  s.require_paths = ["lib", "lib/figure8"]
   s.summary = %q{configuration encapsulation}
 end
 

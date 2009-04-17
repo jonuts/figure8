@@ -4,8 +4,6 @@ $:.unshift(dir) unless $:.include?(dir)
 require 'ext'
 require 'figure8/collection_mixin'
 require 'figure8/configurator'
-require 'figure8/config'
-require 'figure8/scope'
 
 # FIGURE8
 # =======
