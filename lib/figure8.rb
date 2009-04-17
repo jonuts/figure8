@@ -68,6 +68,8 @@ module Figure8
         klass.class_eval(&config)
       end
     end
+    alias :configurate :f8
+
   end
 end
 
