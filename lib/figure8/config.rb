@@ -1,3 +1,4 @@
+=begin
 module Figure8
   class Config
     include CollectionMixin
@@ -28,10 +29,8 @@ module Figure8
 
     def find_config(name, chain=false)
       c = configs.find{ |c| c.name == name }
-      if chain
-        c
-      else
-        c ? c.value : c
+      if chain: c
+      else      c ? c.value : c
       end
     end
     alias :> :find_config
@@ -46,4 +45,4 @@ module Figure8
   end
 
 end
-
+=end
