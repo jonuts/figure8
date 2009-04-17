@@ -3,15 +3,7 @@ module Figure8
 
     # NOTE: i suck
     def self.extended(base)
-      base.class_eval do
-        class << self; attr_reader :scope; end
-
-        @scope = base
-      end
-
-      Object.class_eval("class #{base.name}::Config; end; class #{base.name}::Group; end")
-
-      base::Config.class_eval do
+      base.const_set("Config", Class.new {
         include CollectionMixin
 
         find_by :name
@@ -23,9 +15,9 @@ module Figure8
         end
 
         attr_accessor :name, :value
-      end
+      }) unless base.constants.include?("Config")
 
-      base::Group.class_eval do
+      base.const_set("Group", Class.new {
         include CollectionMixin
 
         class << self; attr_reader :scope; end
@@ -58,8 +50,14 @@ module Figure8
         def set(name, val)
           find_or_create_config(name).value = val
         end
+      }) unless base.constants.include?("Group")
 
+      base.class_eval do
+        class << self; attr_reader :scope; end
+
+        @scope = base
       end
+
     end
 
     def set(name, val=nil, &blk)
@@ -68,12 +66,12 @@ module Figure8
       elsif val.nil?
         raise ArgumentError, "you must supply a value with your setting"
       else
-        find_or_create(scope::Config, name).value = val
+        find_or_create(const_get("Config"), name).value = val
       end
     end
 
     def group(name, &blk)
-      find_or_create(scope::Group, name).instance_eval(&blk)
+      find_or_create(const_get("Group"), name).instance_eval(&blk)
     end
 
     def [](name)
@@ -94,6 +92,7 @@ module Figure8
     def find_or_create(klass, name)
       klass[name] || klass.new(:name => name)
     end
+
   end
 end
 

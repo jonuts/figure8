@@ -12,6 +12,8 @@ module Figure8
             @finder = attribute
           end
         end
+
+        @all ||= []
       end
     end
 
@@ -33,7 +35,7 @@ module Figure8
 
     def add_self_to_collection
       self.class.all ||= []
-      self.class.all << self unless self.class[self]
+      self.class.all << self unless self.class[send(self.class.finder)]
     end
   end
 end
