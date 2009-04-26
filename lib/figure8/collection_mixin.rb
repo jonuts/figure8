@@ -2,40 +2,41 @@ module Figure8
   module CollectionMixin
     def self.included(base)
       base.class_eval do
+        extend Enumerable
         extend ClassMethods
 
         class << self 
-          attr_accessor :all
-          attr_reader :finder
+          attr_reader :finder, :collection
 
           def find_by(attribute)
             @finder = attribute
           end
         end
 
-        @all ||= []
+        @collection ||= []
       end
     end
 
     module ClassMethods
       def [](thing)
-        find(thing)
+        find{|e| thing == e.send(self.finder)}
       end
 
-      def find(thing)
-        Array(all).find{ |e| e.send(self.finder) == thing }
+      def each
+        @collection.each{|i| yield i}
       end
     end
 
     def initialize(*args)
+      super
       add_self_to_collection
     end
 
     private
 
     def add_self_to_collection
-      self.class.all ||= []
-      self.class.all << self unless self.class[send(self.class.finder)]
+      self.class.collection << self unless self.class[send(self.class.finder)]
     end
   end
 end
+
